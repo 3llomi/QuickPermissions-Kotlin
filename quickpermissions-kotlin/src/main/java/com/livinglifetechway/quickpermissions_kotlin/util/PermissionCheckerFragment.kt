@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.util.Log
-import org.jetbrains.anko.alert
 
 /**
  * This fragment holds the single permission request and holds it until the flow is completed
@@ -148,15 +148,15 @@ class PermissionCheckerFragment : Fragment() {
                     return
                 }
 
-                activity?.alert {
-                    message = quickPermissionsRequest?.permanentlyDeniedMessage.orEmpty()
-                    positiveButton("SETTINGS") {
+                AlertDialog.Builder(requireActivity())
+                    .setMessage(quickPermissionsRequest?.permanentlyDeniedMessage.orEmpty())
+                    .setPositiveButton("SETTINGS") { _, _ ->
                         openAppSettings()
                     }
-                    negativeButton("CANCEL") {
+                    .setNegativeButton("CANCEL") { _, _ ->
                         clean()
-                    }
-                }?.apply { isCancelable = false }?.show()
+                    }.setCancelable(false)
+                    .show()
                 return
             }
 
@@ -168,15 +168,15 @@ class PermissionCheckerFragment : Fragment() {
                     return
                 }
 
-                activity?.alert {
-                    message = quickPermissionsRequest?.rationaleMessage.orEmpty()
-                    positiveButton("TRY AGAIN") {
+                AlertDialog.Builder(requireActivity())
+                    .setMessage(quickPermissionsRequest?.rationaleMessage.orEmpty())
+                    .setPositiveButton("TRY AGAIN") { _, _ ->
                         requestPermissionsFromUser()
                     }
-                    negativeButton("CANCEL") {
+                    .setNegativeButton("CANCEL") { _, _ ->
                         clean()
-                    }
-                }?.apply { isCancelable = false }?.show()
+                    }.setCancelable(false)
+                    .show()
                 return
             }
 
